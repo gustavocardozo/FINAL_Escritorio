@@ -10,6 +10,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.swing.*;
 
@@ -19,11 +21,35 @@ import repository.ClienteRepository;
 
 public class FrmAgregarCliente extends JFrame {
 	private JPanel panel;
+	private static final String PATTERN_EMAIL = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
+	            + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+	 
+	    /**
+	     * Validate given email with regular expression.
+	     * 
+	     * @param email
+	     *            email for validation
+	     * @return true valid email, otherwise false
+	     */
+	    public static boolean validateEmail(String email) {
+	 
+	        // Compiles the given regular expression into a pattern.
+	        Pattern pattern = Pattern.compile(PATTERN_EMAIL);
+	 
+	        // Match the given input against this pattern
+	        Matcher matcher = pattern.matcher(email);
+	        return matcher.matches();
+	 
+	    }
 	public static boolean isFechaValida(String fecha) {
         try {
-            SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+            Date fechaActual = new Date();
+        	SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
             formatoFecha.setLenient(false);
-            formatoFecha.parse(fecha);
+            Date date = formatoFecha.parse(fecha);
+            if(fechaActual.compareTo(date) < 0)
+            	return false;
+            //System.out.println("Pase por aqui");
         } catch (ParseException e) {
             return false;
         }
@@ -282,6 +308,10 @@ public class FrmAgregarCliente extends JFrame {
 					errores.add("Debe ingresar un email");
 				}else if (!(textEmail.getText().trim().length() <= 50)){
 					errores.add("Maximo de 50 caracteres para un email");
+				}
+				
+				if(!validateEmail(textEmail.getText().trim())){
+					errores.add("Debe ingresar un email válido");
 				}
 				
 				
