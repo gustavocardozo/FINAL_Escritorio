@@ -21,6 +21,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import model.*;
+import repository.DestinoRepositoty;
 import repository.PaqueteRepository;
 import repository.VueloRepository;
 
@@ -33,10 +34,13 @@ public class FrmAgregarPaquete extends JFrame implements ActionListener{
 	protected JMenuItem agregarPaquetes;
 	
 	public FrmAgregarPaquete(){
+		VueloRepository vueloRepository = new VueloRepository();
+		DestinoRepositoty destinoRepositoty = new DestinoRepositoty();
+		
 		AgregarPaquete = new JPanel();
 		getContentPane().add(AgregarPaquete);
 		AgregarPaquete.setLayout(null);
-		setBounds(100, 100, 270,450);
+		setBounds(100, 100, 310,300);
 		
 		setResizable(false);
 		setTitle("Agregar paquete");
@@ -46,7 +50,7 @@ public class FrmAgregarPaquete extends JFrame implements ActionListener{
 		AgregarPaquete.add(lblPrecio);
 		
 		final JTextField textPrecio = new JTextField(8);
-		textPrecio.setBounds(110, 20, 130, 20);
+		textPrecio.setBounds(110, 20, 170, 20);
 		AgregarPaquete.add(textPrecio);
 		textPrecio.setColumns(10);
 		textPrecio.addKeyListener(new KeyAdapter()
@@ -71,7 +75,7 @@ public class FrmAgregarPaquete extends JFrame implements ActionListener{
 		AgregarPaquete.add(lblNombre);
 		
 		final JTextField textNombre = new JTextField(10);
-		textNombre.setBounds(110, 50, 130, 20);
+		textNombre.setBounds(110, 50, 170, 20);
 		AgregarPaquete.add(textNombre);
 		textNombre.setColumns(10);
 		
@@ -79,40 +83,61 @@ public class FrmAgregarPaquete extends JFrame implements ActionListener{
 		lblDesde.setBounds(20, 80, 110, 15);
 		AgregarPaquete.add(lblDesde);
 		
-		final JTextField textDesde = new JTextField();
-		textDesde.setBounds(110, 80, 130, 20);
-		AgregarPaquete.add(textDesde);
-		textDesde.setColumns(10);
+		final JComboBox comboDesde = new JComboBox(destinoRepositoty.ListadoBase().toArray());
+		comboDesde.setBounds(110, 80, 170, 20);
+		AgregarPaquete.add(comboDesde);
+		
 		
 		JLabel lblHacia = new JLabel("Hacia: ");
 		lblHacia.setBounds(20, 110, 110, 15);
 		AgregarPaquete.add(lblHacia);
 		
-		
-		final JTextField textHacia = new JTextField();
-		textHacia.setBounds(110, 110, 130, 20);
-		AgregarPaquete.add(textHacia);
-		textHacia.setColumns(10);
-		
-		VueloRepository vueloRepository = new VueloRepository();
-		
-		JLabel lblVuelo = new JLabel("Vuelo: ");
-		lblVuelo.setBounds(20, 140, 110, 15);
-		AgregarPaquete.add(lblVuelo);
-		
-		final JComboBox comboVuelo = new JComboBox(vueloRepository.ListadoBase().toArray());
-		comboVuelo.setBounds(110, 140, 130, 20);
-		AgregarPaquete.add(comboVuelo);
+		final JComboBox comboHacia = new JComboBox(destinoRepositoty.ListadoBase().toArray());
+		comboHacia.setBounds(110, 110, 170, 20);
+		AgregarPaquete.add(comboHacia);
 		
 		
+		JLabel lblCant = new JLabel("Personas: ");
+		lblCant.setBounds(20, 140, 110, 15);
+		AgregarPaquete.add(lblCant);
+		
+		final JTextField textCant = new JTextField(10);
+		textCant.setBounds(110, 140, 170, 20);
+		AgregarPaquete.add(textCant);
+		textCant.setColumns(10);
+		
+		textCant.addKeyListener(new KeyAdapter()
+		{
+		   public void keyTyped(KeyEvent e)
+		   {
+		      char caracter = e.getKeyChar();
+
+		      // Verificar si la tecla pulsada no es un digito
+		      if(((caracter < '0') ||
+		         (caracter > '9')) &&
+		         (caracter != '\b' /*corresponde a BACK_SPACE*/))
+		      {
+		         e.consume();  // ignorar el evento de teclado
+		      }
+		   }
+		});
+		
+		JLabel lblDescr = new JLabel("Descripcion: ");
+		lblDescr.setBounds(20, 170, 110, 15);
+		AgregarPaquete.add(lblDescr);
+		
+		final JTextField textDescr = new JTextField(10);
+		textDescr.setBounds(110, 170, 170, 20);
+		AgregarPaquete.add(textDescr);
+		textDescr.setColumns(10);
 		
 		
 		JButton btnAgregar = new JButton("Agregar");
-		btnAgregar.setBounds(30, 300, 90, 25);
+		btnAgregar.setBounds(50, 220, 90, 25);
 		AgregarPaquete.add(btnAgregar);
 		
 		JButton btnCancelar = new JButton("Cancelar");
-		btnCancelar.setBounds(140, 300, 90, 25);
+		btnCancelar.setBounds(160, 220, 90, 25);
 		AgregarPaquete.add(btnCancelar);	
 		
 		btnAgregar.addActionListener(new ActionListener() {
@@ -121,25 +146,31 @@ public class FrmAgregarPaquete extends JFrame implements ActionListener{
 				{
 					if(validarForm()){
 						PaqueteRepository paqueteRepository = new PaqueteRepository();
-						VueloRepository vueloRepository = new VueloRepository();
 						Paquete paquete = new Paquete();
 						//Vuelo vuelo = new Vuelo();
 						
 						paquete.setId(paqueteRepository.GetID());
 						paquete.setNombre(textNombre.getText());
 						paquete.setPrecio(Float.parseFloat(textPrecio.getText()));
-						paquete.setCantidadPersonas(1);
+						paquete.setCantidadPersonas(Integer.parseInt(textCant.getText()));
 						
-						String identificador = comboVuelo.getSelectedItem().toString().substring(comboVuelo.getSelectedItem().toString().lastIndexOf(";")+1,comboVuelo.getSelectedItem().toString().length());
+						String identificadorDesde = comboDesde.getSelectedItem().toString().substring(comboDesde.getSelectedItem().toString().lastIndexOf(";")+1,comboDesde.getSelectedItem().toString().length());
+						String identificadorHacia = comboHacia.getSelectedItem().toString().substring(comboHacia.getSelectedItem().toString().lastIndexOf(";")+1,comboHacia.getSelectedItem().toString().length());
 						
-						Integer id = Integer.parseInt(identificador);
-						paquete.setVuelo(vueloRepository.GetByIdBase(id));
-						if(paqueteRepository.InsertarArchivo(paquete))
+						Integer idDesde = Integer.parseInt(identificadorDesde);
+						Integer idHacia = Integer.parseInt(identificadorHacia);
+						paquete.setDesde(destinoRepositoty.GetByIdBase(idDesde));
+						paquete.setHacia(destinoRepositoty.GetByIdBase(idHacia));
+						if(paqueteRepository.InsertarBase(paquete))
 						{
 							JOptionPane.showMessageDialog(FrmAgregarPaquete.this, "Se agrego correctamente");
+							System.out.print("SE GRABO SUPUESTAMENTE");
+							FrmAgregarPaquete.this.dispose();
+						}else{
+							JOptionPane.showMessageDialog(FrmAgregarPaquete.this, "Hubo un error en su solicitud, intente nuevamente mas tarde.");
 							FrmAgregarPaquete.this.dispose();
 						}
-						System.out.print("SE GRABO SUPUESTAMENTE");
+						
 					}
 				} catch (Exception e1) {
 					// TODO Auto-generated catch block
@@ -159,6 +190,14 @@ public class FrmAgregarPaquete extends JFrame implements ActionListener{
 				
 				//falta validar numerico
 				
+				if(comboDesde.getSelectedIndex() < 0)
+					errores.add("Debe seleccionar un destino de partida");
+				
+				if(comboHacia.getSelectedIndex() < 0)
+					errores.add("Debe seleccionar un destino de llegada");
+				
+				if(comboHacia.getSelectedIndex() == comboDesde.getSelectedIndex())
+					errores.add("Los destinos son iguales");
 				
 				if(textPrecio.getText().trim().length() <= 0){
 					errores.add("Debe ingresar un precio");
@@ -168,20 +207,20 @@ public class FrmAgregarPaquete extends JFrame implements ActionListener{
 				
 				if(textNombre.getText().trim().length() <= 0){
 					errores.add("Debe ingresar un nombre");
-				}else if (!(textNombre.getText().trim().length() <= 30)){
-					errores.add("Maximo de 30 caracteres para nombre");
+				}else if (!(textNombre.getText().trim().length() <= 50)){
+					errores.add("Maximo de 50 caracteres para nombre");
 				}
 				
-				if(textDesde.getText().trim().length() <= 0){
-					errores.add("Debe ingresar un lugar de partida");
-				}else if (!(textDesde.getText().trim().length() <= 30)){
-					errores.add("Maximo de 30 caracteres para un lugar de partida");
+				if(textCant.getText().trim().length() <= 0){
+					errores.add("Debe ingresar una cantidad");
+				}else if (!(textCant.getText().trim().length() <= 3)){
+					errores.add("Maximo de 3 caracteres para una cantidad");
 				}
 				
-				if(textHacia.getText().trim().length() <= 0){
-					errores.add("Debe ingresar un lugar de destino");
-				}else if (!(textHacia.getText().trim().length() <= 30)){
-					errores.add("Maximo de 30 caracteres para un lugar de destino");
+				if(textDescr.getText().trim().length() <= 0){
+					errores.add("Debe ingresar una descripcion");
+				}else if (!(textDescr.getText().trim().length() <= 100)){
+					errores.add("Maximo de 100 caracteres para una descripcion");
 				}
 				
 				
