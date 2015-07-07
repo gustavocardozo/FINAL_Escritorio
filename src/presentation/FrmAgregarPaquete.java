@@ -21,7 +21,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import model.*;
-import repository.DestinoRepositoty;
+import repository.DestinoRepository;
 import repository.PaqueteRepository;
 import repository.VueloRepository;
 
@@ -35,7 +35,7 @@ public class FrmAgregarPaquete extends JFrame implements ActionListener{
 	
 	public FrmAgregarPaquete(){
 		VueloRepository vueloRepository = new VueloRepository();
-		DestinoRepositoty destinoRepositoty = new DestinoRepositoty();
+		DestinoRepository destinoRepositoty = new DestinoRepository();
 		
 		AgregarPaquete = new JPanel();
 		getContentPane().add(AgregarPaquete);
