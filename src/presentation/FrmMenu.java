@@ -21,8 +21,8 @@ public class FrmMenu extends JFrame  implements ActionListener {
 	 */
 	private static final long serialVersionUID = 1L;
 	private JMenuBar mb;
-	 private JMenu mClientes, mPqtTuristico, mMigrar, mAviones;
-	 private JMenuItem jmListadoClientes, jmAltaPaquetes, jmSalir, jmAltaClientes, jmListadoAviones, jmMigrarClientes, jmMigrarPaquetes;
+	 private JMenu mClientes, mPqtTuristico, mMigrar, mAviones, mVuelos;
+	 private JMenuItem jmListadoClientes, jmAltaPaquetes,jmAltaVuelos, jmSalir, jmAltaClientes, jmListadoAviones, jmMigrarClientes, jmMigrarPaquetes;
 	    
 	   	
 	    public FrmMenu() {
@@ -59,6 +59,12 @@ public class FrmMenu extends JFrame  implements ActionListener {
 	        mPqtTuristico.add(jmAltaPaquetes);
 	        jmAltaPaquetes.addActionListener(this);
 	        
+	        mVuelos=new JMenu("Vuelos");
+	        mb.add(mVuelos);
+	        
+	        jmAltaVuelos = new JMenuItem("Agregar vuelo");
+	        mVuelos.add(jmAltaVuelos);
+	        jmAltaVuelos.addActionListener(this);
 	        
 	        mMigrar=new JMenu("Migrar");
 	        mb.add(mMigrar);
@@ -102,6 +108,15 @@ public class FrmMenu extends JFrame  implements ActionListener {
 					//Menu.setVisible(false);
 					//AgregarPaquete.setVisible(true);
 					FrmAgregarPaquete FormAddPackage = new FrmAgregarPaquete();
+					FormAddPackage.setVisible(true);
+				}
+			});
+	        
+	        jmAltaVuelos.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					//Menu.setVisible(false);
+					//AgregarPaquete.setVisible(true);
+					FrmAgregarVuelo FormAddPackage = new FrmAgregarVuelo();
 					FormAddPackage.setVisible(true);
 				}
 			});
