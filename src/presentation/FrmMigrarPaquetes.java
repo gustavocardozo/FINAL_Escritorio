@@ -45,7 +45,7 @@ public class FrmMigrarPaquetes extends JFrame implements Runnable {
 		int proceso=0;
 		List<Paquete> paquetes = new ArrayList<>();
 		
-		paquetes = paqueteRepository.ListadoArchivo();
+		paquetes = paqueteRepository.listaParaMigrar();
 
 		
 		cantidad.setText(String.valueOf(paquetes.size()));
@@ -56,18 +56,22 @@ public class FrmMigrarPaquetes extends JFrame implements Runnable {
 			JOptionPane.showMessageDialog(FrmMigrarPaquetes.this, "No hay nada para migrar");
 			FrmMigrarPaquetes.this.dispose();
 		}
-		
-		for(Paquete p : paquetes)
+		else
 		{
-			paqueteRepository.InsertarBase(p);
-			System.out.println("ANDA");			
-			barra.setValue(barra.getValue()+1);
-			proceso++;
-			cantidad.setText("Progreso: " + proceso + "/"+paquetes.size());
+			for(Paquete p : paquetes)
+			{
+				paqueteRepository.InsertarBase(p);
+				System.out.println("ANDA");			
+				barra.setValue(barra.getValue()+1);
+				proceso++;
+				cantidad.setText("Progreso: " + proceso + "/"+paquetes.size());
+			}
+			
+			JOptionPane.showMessageDialog(FrmMigrarPaquetes.this, "Se migro correctamente");
+			FrmMigrarPaquetes.this.dispose();
 		}
 		
-		JOptionPane.showMessageDialog(FrmMigrarPaquetes.this, "Se migro correctamente");
-		FrmMigrarPaquetes.this.dispose();
+		
 		
 		
 	}

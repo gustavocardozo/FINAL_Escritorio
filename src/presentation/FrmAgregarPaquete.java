@@ -161,7 +161,8 @@ public class FrmAgregarPaquete extends JFrame implements ActionListener{
 						Integer idHacia = Integer.parseInt(identificadorHacia);
 						paquete.setDesde(destinoRepositoty.GetByIdBase(idDesde));
 						paquete.setHacia(destinoRepositoty.GetByIdBase(idHacia));
-						if(paqueteRepository.InsertarBase(paquete))
+						paquete.setDescripcion(textDescr.getText().trim());
+						if(paqueteRepository.InsertarArchivo(paquete))
 						{
 							JOptionPane.showMessageDialog(FrmAgregarPaquete.this, "Se agrego correctamente");
 							System.out.print("SE GRABO SUPUESTAMENTE");
